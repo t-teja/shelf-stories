@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-stud-red: #E31C23;
+  --color-brick-yellow: #FFD500;
+  --color-sky-blue: #00A3E0;
+  --color-clay: #F4F1EA;
+  --color-clay-dark: #1A1B22;
+  --color-ink: #1A1523;
+  --color-muted: #6B6375;
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, sans-serif;
+}
+
+:root {
+  color-scheme: light;
+  --bg: #F7F4EE;
+  --bg-elevated: #FFFEFB;
+  --bg-soft: #EEEAE2;
+  --text: #1A1523;
+  --text-muted: #6B6375;
+  --border: #E4DFD5;
+  --shadow: 0 10px 30px -12px rgba(26, 21, 35, 0.18);
+  --stud: #E31C23;
+  --brick: #FFD500;
+  --sky: #00A3E0;
+}
+
+.dark {
+  color-scheme: dark;
+  --bg: #0E0F14;
+  --bg-elevated: #171821;
+  --bg-soft: #1F212C;
+  --text: #F4F1EA;
+  --text-muted: #A39EAE;
+  --border: #2C2E3A;
+  --shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.55);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-display);
+}
+
+/* Clay card */
+.clay-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 1.25rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.clay-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 36px -14px rgba(227, 28, 35, 0.22);
+}
+
+.dark .clay-card:hover {
+  box-shadow: 0 16px 40px -12px rgba(0, 163, 224, 0.25);
+}
+
+/* Stud pattern backdrop */
+.stud-bg {
+  background-image:
+    radial-gradient(circle at 12px 12px, color-mix(in oklab, var(--stud) 12%, transparent) 3px, transparent 4px),
+    radial-gradient(circle at 36px 36px, color-mix(in oklab, var(--sky) 10%, transparent) 3px, transparent 4px);
+  background-size: 48px 48px;
+}
+
+.dark .stud-bg {
+  background-image:
+    radial-gradient(circle at 12px 12px, rgba(227, 28, 35, 0.12) 3px, transparent 4px),
+    radial-gradient(circle at 36px 36px, rgba(0, 163, 224, 0.1) 3px, transparent 4px);
+}
+
+/* Scrollbars */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb {
+  background: color-mix(in oklab, var(--text-muted) 40%, transparent);
+  border-radius: 999px;
+}
+
+/* Ken Burns */
+@keyframes kenburns {
+  0% { transform: scale(1) translate(0, 0); }
+  50% { transform: scale(1.12) translate(-1.5%, -1%); }
+  100% { transform: scale(1.05) translate(1%, 0.5%); }
+}
+
+.ken-burns {
+  animation: kenburns 12s ease-in-out infinite alternate;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+  animation: fade-in 0.35s ease both;
+}
+
+@keyframes pulse-stud {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(227, 28, 35, 0.35); }
+  50% { box-shadow: 0 0 0 8px rgba(227, 28, 35, 0); }
+}
+
+.pulse-stud {
+  animation: pulse-stud 2s infinite;
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+  background: rgba(14, 15, 20, 0.55);
+  backdrop-filter: blur(6px);
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--sky);
+  outline-offset: 2px;
+}
+
+/* TV mode hide chrome */
+.tv-mode body {
+  overflow: hidden;
+}
