@@ -1,0 +1,16 @@
+services:
+  shelf-stories:
+    build: .
+    image: shelf-stories:latest
+    container_name: shelf-stories
+    ports:
+      - "3080:3080"
+    volumes:
+      - ./data:/data
+    environment:
+      PORT: "3080"
+      DATA_DIR: /data
+      DB_PATH: /data/shelf-stories.sqlite
+      UPLOADS_DIR: /data/uploads
+      STATIC_DIR: /app/dist
+    restart: unless-stopped

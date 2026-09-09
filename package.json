@@ -5,9 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:api": "npm --prefix server run dev",
     "build": "tsc -b && vite build",
+    "build:docker": "VITE_DATA_MODE=api VITE_API_URL=/api VITE_BASE=/ npm run build",
     "lint": "oxlint",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "npm --prefix server start",
+    "server:install": "npm --prefix server install"
   },
   "dependencies": {
     "idb": "^8.0.3",
