@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { CollectionItem, Filters, Room, SortKey } from '../types';
-import { clearAllItems, getAllItems, getMeta, putAllItems, putItem, deleteItem, setMeta } from '../lib/db';
+import { getStore, type DataMode } from '../lib/storage';
 import { createSeedItems } from '../lib/seed';
 import { isSimilar } from '../lib/heuristics';
 
@@ -40,6 +40,7 @@ function roomFilter(room: Room, item: CollectionItem): boolean {
 export function useCollection() {
   const [items, setItems] = useState<CollectionItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [dataMode, setDataMode] = useState<DataMode | null>(null);
   const [room, setRoom] = useState<Room>('all');
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [sort, setSort] = useState<SortKey>('date');
@@ -48,13 +49,17 @@ export function useCollection() {
   useEffect(() => {
     (async () => {
       try {
-        let all = await getAllItems();
-        const seeded = await getMeta<boolean>('seeded');
-        if (all.length === 0 && !seeded) {
-          const seed = createSeedItems();
-          await putAllItems(seed);
-          await setMeta('seeded', true);
-          all = seed;
+        const store = await getStore();
+        setDataMode(store.mode);
+        let all = await store.getAllItems();
+        if (store.shouldSeedLocally()) {
+          const seeded = await store.getMeta<boolean>('seeded');
+          if (all.length === 0 && !seeded) {
+            const seed = createSeedItems();
+            await store.putAllItems(seed);
+            await store.setMeta('seeded', true);
+            all = seed;
+          }
         }
         setItems(all);
       } finally {
@@ -64,7 +69,8 @@ export function useCollection() {
   }, []);
 
   const upsert = useCallback(async (item: CollectionItem) => {
-    await putItem(item);
+    const store = await getStore();
+    await store.putItem(item);
     setItems((prev) => {
       const idx = prev.findIndex((p) => p.id === item.id);
       if (idx === -1) return [item, ...prev];
@@ -75,14 +81,18 @@ export function useCollection() {
   }, []);
 
   const remove = useCallback(async (id: string) => {
-    await deleteItem(id);
+    const store = await getStore();
+    await store.deleteItem(id);
     setItems((prev) => prev.filter((p) => p.id !== id));
   }, []);
 
   const replaceAll = useCallback(async (next: CollectionItem[]) => {
-    await clearAllItems();
-    await putAllItems(next);
-    await setMeta('seeded', true);
+    const store = await getStore();
+    await store.clearAllItems();
+    await store.putAllItems(next);
+    if (store.shouldSeedLocally()) {
+      await store.setMeta('seeded', true);
+    }
     setItems(next);
   }, []);
 
@@ -157,6 +167,7 @@ export function useCollection() {
     visible,
     showcaseItems,
     loading,
+    dataMode,
     room,
     setRoom,
     filters,
