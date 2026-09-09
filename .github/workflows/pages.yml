@@ -28,7 +28,8 @@ jobs:
           cache: npm
 
       - name: Install
-        run: npm ci
+        # Use npm install (not npm ci) so a stub/incomplete lockfile cannot break Pages.
+        run: npm install --no-fund --no-audit
 
       - name: Build (IndexedDB / local mode for Pages)
         env:
