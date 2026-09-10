@@ -83,6 +83,7 @@ export const COLOR_HEX: Record<ColorFamily, string> = {
 };
 
 export const ROOMS: { id: Room; label: string; hint: string }[] = [
+  { id: 'tv', label: 'Showcase', hint: 'Cinematic presentation' },
   { id: 'all', label: 'The Collection', hint: 'Full inventory' },
   { id: 'garage', label: 'Garage', hint: 'Cars · Hot Wheels · Matchbox' },
   { id: 'brickyard', label: 'Brick Yard', hint: 'Lego · Technic · Sets' },
@@ -91,5 +92,4 @@ export const ROOMS: { id: Room; label: string; hint: string }[] = [
   { id: 'paddock', label: 'Paddock', hint: 'Formula 1 machines' },
   { id: 'want', label: 'Wishlist', hint: 'Acquisitions ahead' },
   { id: 'studmap', label: 'Gallery Wall', hint: 'Visual cover grid' },
-  { id: 'tv', label: 'Showcase', hint: 'Cinematic presentation' },
 ];
