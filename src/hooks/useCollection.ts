@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { CollectionItem, Filters, Room, SortKey } from '../types';
 import { getStore, type DataMode } from '../lib/storage';
-import { createSeedItems } from '../lib/seed';
+import { createSeedItems, SEED_VERSION } from '../lib/seed';
 import { isSimilar } from '../lib/heuristics';
 
 const defaultFilters: Filters = {
@@ -41,7 +41,7 @@ export function useCollection() {
   const [items, setItems] = useState<CollectionItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [dataMode, setDataMode] = useState<DataMode | null>(null);
-  const [room, setRoom] = useState<Room>('all');
+  const [room, setRoom] = useState<Room>('tv');
   const [filters, setFilters] = useState<Filters>(defaultFilters);
   const [sort, setSort] = useState<SortKey>('date');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
@@ -53,11 +53,13 @@ export function useCollection() {
         setDataMode(store.mode);
         let all = await store.getAllItems();
         if (store.shouldSeedLocally()) {
-          const seeded = await store.getMeta<boolean>('seeded');
-          if (all.length === 0 && !seeded) {
+          const version = await store.getMeta<string>('seedVersion');
+          if (version !== SEED_VERSION) {
             const seed = createSeedItems();
+            await store.clearAllItems();
             await store.putAllItems(seed);
             await store.setMeta('seeded', true);
+            await store.setMeta('seedVersion', SEED_VERSION);
             all = seed;
           }
         }

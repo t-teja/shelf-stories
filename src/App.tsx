@@ -176,9 +176,9 @@ export default function App() {
           <div className="hero-strip">
             <div className="px-3 sm:px-6">
               <div className="rule-rosso mb-4" />
-              <h2>The Collection</h2>
+              <h2>Tejas Playground</h2>
               <p>
-                {items.filter((i) => !i.isWant).length} pieces · {items.filter((i) => i.isWant).length} wishlist
+                Lego and Hotwheels Collection · {items.filter((i) => !i.isWant).length} pieces · {items.filter((i) => i.isWant).length} wishlist
               </p>
             </div>
           </div>
