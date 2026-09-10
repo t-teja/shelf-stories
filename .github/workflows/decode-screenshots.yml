@@ -1,0 +1,38 @@
+name: Decode README screenshots
+on:
+  push:
+    paths:
+      - 'docs/screenshots/*.b64'
+      - '.github/workflows/decode-screenshots.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  decode:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Decode .b64 to .jpg
+        run: |
+          set -euo pipefail
+          for name in showcase collection paddock; do
+            if [ -f "docs/screenshots/${name}.b64" ]; then
+              base64 -d "docs/screenshots/${name}.b64" > "docs/screenshots/${name}.jpg"
+              echo "decoded ${name}.jpg ($(wc -c < docs/screenshots/${name}.jpg) bytes)"
+              rm -f "docs/screenshots/${name}.b64"
+            fi
+          done
+          # remove broken test/svg leftovers if present
+          rm -f docs/screenshots/pixel.jpg docs/screenshots/*.svg || true
+      - name: Commit JPEGs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/screenshots/*.jpg || true
+          git add -u docs/screenshots || true
+          if git diff --cached --quiet; then
+            echo "No changes"
+            exit 0
+          fi
+          git commit -m "docs: decode README screenshot JPEGs"
+          git push
