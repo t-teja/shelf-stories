@@ -2,7 +2,7 @@ import type { CollectionItem } from '../types';
 
 export function exportToJson(items: CollectionItem[]): void {
   const payload = {
-    app: 'Shelf Stories',
+    app: 'Tejas Playground',
     version: 1,
     exportedAt: new Date().toISOString(),
     items,
@@ -11,7 +11,7 @@ export function exportToJson(items: CollectionItem[]): void {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `shelf-stories-${new Date().toISOString().slice(0, 10)}.json`;
+  a.download = `tejas-playground-${new Date().toISOString().slice(0, 10)}.json`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -20,7 +20,7 @@ export async function parseImportFile(file: File): Promise<CollectionItem[]> {
   const text = await file.text();
   const data = JSON.parse(text);
   const items: CollectionItem[] = Array.isArray(data) ? data : data.items;
-  if (!Array.isArray(items)) throw new Error('Invalid Shelf Stories export');
+  if (!Array.isArray(items)) throw new Error('Invalid Tejas Playground export');
   return items.map((item) => ({
     ...item,
     tags: item.tags ?? [],
