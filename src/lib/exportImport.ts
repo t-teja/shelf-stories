@@ -31,7 +31,7 @@ export async function parseImportFile(file: File): Promise<CollectionItem[]> {
       images: item.images ?? [],
       primaryImageIndex: item.primaryImageIndex ?? 0,
       starred: !!item.starred,
-      featured: !!item.isWant,
+      featured: !!item.featured,
       isWant: !!item.isWant,
       price,
       purchasedFrom: item.purchasedFrom?.trim() || undefined,
