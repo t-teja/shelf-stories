@@ -11,18 +11,18 @@ function uid() {
 
 function makePlaceholder(brand: Brand, color: ColorFamily, name: string): string {
   const brandHex: Record<Brand, string> = {
-    'Hot Wheels': '#E31C23', Lego: '#FFD500', Matchbox: '#F97316', Mattel: '#00A3E0', Other: '#8B5CF6',
+    'Hot Wheels': '#DA291C', Lego: '#2A2A2A', Matchbox: '#3A3A3A', Mattel: '#444', Other: '#333',
   };
   const colorHex: Record<ColorFamily, string> = {
-    Red: '#E31C23', Blue: '#00A3E0', Yellow: '#FFD500', Green: '#22C55E', Orange: '#F97316',
-    Purple: '#8B5CF6', Black: '#374151', White: '#E2E8F0', Silver: '#94A3B8', Gold: '#EAB308',
-    Pink: '#EC4899', Multi: '#A855F7', Other: '#64748B',
+    Red: '#DA291C', Blue: '#2A3A4A', Yellow: '#3A3420', Green: '#1E2E24', Orange: '#3A2818',
+    Purple: '#2A2430', Black: '#111', White: '#2A2A2A', Silver: '#2A2A2A', Gold: '#3A3020',
+    Pink: '#2E2024', Multi: '#222', Other: '#1A1A1A',
   };
   const c1 = brandHex[brand];
   const c2 = colorHex[color];
   const initial = brandInitial(brand);
-  const safe = (name || 'New Item').slice(0, 28).replace(/[<>&]/g, '');
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${c1}"/><stop offset="100%" stop-color="${c2}"/></linearGradient></defs><rect width="640" height="480" rx="28" fill="url(#g)"/><text x="320" y="220" text-anchor="middle" font-family="system-ui" font-size="72" font-weight="800" fill="#fff">${initial}</text><text x="320" y="290" text-anchor="middle" font-family="system-ui" font-size="26" font-weight="700" fill="#fff">${safe}</text></svg>`;
+  const safe = (name || 'New Piece').slice(0, 28).replace(/[<>&]/g, '');
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${c1}"/><stop offset="100%" stop-color="${c2}"/></linearGradient></defs><rect width="640" height="480" fill="url(#g)"/><text x="320" y="220" text-anchor="middle" font-family="Georgia, serif" font-size="64" font-weight="500" fill="#F5F5F5">${initial}</text><text x="320" y="290" text-anchor="middle" font-family="system-ui" font-size="18" font-weight="500" letter-spacing="2" fill="#8F8F8F">${safe}</text></svg>`;
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
@@ -83,6 +83,9 @@ function itemToDraft(item?: CollectionItem | null, initialWant = false): Draft {
     acquiredAt: item.acquiredAt ?? '',
   };
 }
+
+const fieldClass = 'mt-1 w-full border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm';
+const labelClass = 'block text-[10px] font-medium uppercase tracking-[0.12em] text-[var(--text-muted)]';
 
 export function AddItemModal({
   open,
@@ -147,7 +150,7 @@ export function AddItemModal({
   const preview = useMemo(() => {
     if (draft.images[draft.primaryImageIndex]) return draft.images[draft.primaryImageIndex];
     if (draft.images[0]) return draft.images[0];
-    return makePlaceholder(draft.brand, draft.color, draft.name || 'New Item');
+    return makePlaceholder(draft.brand, draft.color, draft.name || 'New Piece');
   }, [draft]);
 
   if (!open) return null;
@@ -226,28 +229,30 @@ export function AddItemModal({
   return (
     <div className="modal-backdrop fixed inset-0 z-50 flex items-end justify-center p-0 sm:items-center sm:p-4" onClick={onClose}>
       <div
-        className="max-h-[95vh] w-full max-w-2xl overflow-y-auto rounded-t-3xl border border-[var(--border)] bg-[var(--bg-elevated)] shadow-2xl sm:rounded-3xl"
+        className="max-h-[95vh] w-full max-w-2xl overflow-y-auto border border-[var(--border)] bg-[var(--bg-elevated)] shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-elevated)]/95 px-4 py-3 backdrop-blur sm:px-5">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-elevated)]/95 px-4 py-4 backdrop-blur sm:px-6">
           <div>
-            <h2 className="font-display text-lg font-bold">{editing ? 'Edit item' : 'Add to shelf'}</h2>
-            <p className="text-xs text-[var(--text-muted)]">Name, SKU, barcode, or model — we guess the rest.</p>
+            <h2 className="font-display text-xl font-medium tracking-wide">{editing ? 'Edit piece' : 'Add to collection'}</h2>
+            <p className="mt-0.5 text-[10px] uppercase tracking-[0.12em] text-[var(--text-muted)]">
+              Name, SKU, barcode, or model — details fill in automatically
+            </p>
           </div>
-          <button type="button" onClick={onClose} className="rounded-xl p-2 hover:bg-[var(--bg-soft)]" aria-label="Close">
-            <X size={20} />
+          <button type="button" onClick={onClose} className="p-2 hover:bg-[var(--bg-soft)]" aria-label="Close">
+            <X size={18} strokeWidth={1.5} />
           </button>
         </div>
 
-        <form onSubmit={submit} className="space-y-4 p-4 sm:p-5">
+        <form onSubmit={submit} className="space-y-4 p-4 sm:p-6">
           {duplicates.length > 0 && (
-            <div className="flex gap-2 rounded-2xl border border-amber-400/50 bg-amber-400/10 p-3 text-sm">
-              <AlertTriangle className="mt-0.5 shrink-0 text-amber-500" size={18} />
+            <div className="flex gap-2 border border-[#DA291C]/40 bg-[#DA291C]/08 p-3 text-sm">
+              <AlertTriangle className="mt-0.5 shrink-0 text-[#DA291C]" size={16} strokeWidth={1.5} />
               <div className="text-left">
-                <p className="font-bold text-amber-700 dark:text-amber-300">Possible duplicate</p>
+                <p className="text-[11px] font-medium uppercase tracking-[0.1em] text-[#DA291C]">Possible duplicate</p>
                 <ul className="mt-1 space-y-0.5 text-xs text-[var(--text-muted)]">
                   {duplicates.slice(0, 3).map((d) => (
-                    <li key={d.id}>• {d.name}{d.sku ? ` (${d.sku})` : ''}</li>
+                    <li key={d.id}>· {d.name}{d.sku ? ` (${d.sku})` : ''}</li>
                   ))}
                 </ul>
               </div>
@@ -256,7 +261,7 @@ export function AddItemModal({
 
           <div className="grid gap-4 sm:grid-cols-[160px_1fr]">
             <div className="space-y-2">
-              <div className="aspect-square overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--bg-soft)]">
+              <div className="aspect-square overflow-hidden border border-[var(--border)] bg-[var(--bg-soft)]">
                 <img src={preview} alt="" className="h-full w-full object-cover" style={{ background: placeholderGradient(draft.brand, draft.color) }} />
               </div>
               <div className="flex flex-wrap gap-1">
@@ -265,11 +270,11 @@ export function AddItemModal({
                     <button
                       type="button"
                       onClick={() => setDraft((d) => ({ ...d, primaryImageIndex: i }))}
-                      className={`h-10 w-10 overflow-hidden rounded-lg border-2 ${i === draft.primaryImageIndex ? 'border-stud-red' : 'border-transparent'}`}
+                      className={`h-10 w-10 overflow-hidden border ${i === draft.primaryImageIndex ? 'border-[#DA291C]' : 'border-[var(--border)]'}`}
                     >
                       <img src={img} alt="" className="h-full w-full object-cover" />
                     </button>
-                    <button type="button" onClick={() => removeImage(i)} className="absolute -right-1 -top-1 rounded-full bg-stud-red p-0.5 text-white" aria-label="Remove image">
+                    <button type="button" onClick={() => removeImage(i)} className="absolute -right-1 -top-1 bg-[#DA291C] p-0.5 text-white" aria-label="Remove image">
                       <Trash2 size={10} />
                     </button>
                   </div>
@@ -278,112 +283,112 @@ export function AddItemModal({
             </div>
 
             <div className="space-y-3 text-left">
-              <label className="block text-xs font-bold">
+              <label className={labelClass}>
                 Name *
                 <input
                   required
                   value={draft.name}
                   onChange={(e) => setDraft({ ...draft, name: e.target.value })}
-                  className="mt-1 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm"
+                  className={fieldClass}
                   placeholder="Hot Wheels Twin Mill Red"
                 />
               </label>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-                <label className="block text-xs font-bold">
+                <label className={labelClass}>
                   SKU
-                  <input value={draft.sku} onChange={(e) => setDraft({ ...draft, sku: e.target.value })} className="mt-1 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm" />
+                  <input value={draft.sku} onChange={(e) => setDraft({ ...draft, sku: e.target.value })} className={fieldClass} />
                 </label>
-                <label className="block text-xs font-bold">
+                <label className={labelClass}>
                   Barcode
-                  <input value={draft.barcode} onChange={(e) => setDraft({ ...draft, barcode: e.target.value })} className="mt-1 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm" />
+                  <input value={draft.barcode} onChange={(e) => setDraft({ ...draft, barcode: e.target.value })} className={fieldClass} />
                 </label>
-                <label className="block text-xs font-bold">
+                <label className={labelClass}>
                   Model #
-                  <input value={draft.modelNumber} onChange={(e) => setDraft({ ...draft, modelNumber: e.target.value })} className="mt-1 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm" />
+                  <input value={draft.modelNumber} onChange={(e) => setDraft({ ...draft, modelNumber: e.target.value })} className={fieldClass} />
                 </label>
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 <BrandBadge brand={draft.brand} size="md" />
-                <span className="text-xs text-[var(--text-muted)]">Auto-detected — edit below anytime.</span>
+                <span className="text-[10px] uppercase tracking-[0.08em] text-[var(--text-muted)]">Auto-detected — edit below anytime</span>
               </div>
             </div>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3">
-            <label className="block text-xs font-bold">
+            <label className={labelClass}>
               Brand
-              <select value={draft.brand} onChange={(e) => setDraft({ ...draft, brand: e.target.value as Brand })} className="mt-1 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm">
+              <select value={draft.brand} onChange={(e) => setDraft({ ...draft, brand: e.target.value as Brand })} className={fieldClass}>
                 {BRANDS.map((b) => <option key={b} value={b}>{b}</option>)}
               </select>
             </label>
-            <label className="block text-xs font-bold">
+            <label className={labelClass}>
               Category
-              <select value={draft.category} onChange={(e) => setDraft({ ...draft, category: e.target.value as Category })} className="mt-1 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm">
+              <select value={draft.category} onChange={(e) => setDraft({ ...draft, category: e.target.value as Category })} className={fieldClass}>
                 {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </label>
-            <label className="block text-xs font-bold">
+            <label className={labelClass}>
               Color
-              <select value={draft.color} onChange={(e) => setDraft({ ...draft, color: e.target.value as ColorFamily })} className="mt-1 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm">
+              <select value={draft.color} onChange={(e) => setDraft({ ...draft, color: e.target.value as ColorFamily })} className={fieldClass}>
                 {COLORS.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
             </label>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <label className="block text-xs font-bold">
+            <label className={labelClass}>
               Tags (comma-separated)
-              <input value={draft.tags} onChange={(e) => setDraft({ ...draft, tags: e.target.value })} className="mt-1 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm" placeholder="Die-cast, 1:64" />
+              <input value={draft.tags} onChange={(e) => setDraft({ ...draft, tags: e.target.value })} className={fieldClass} placeholder="Die-cast, 1:64" />
             </label>
-            <label className="block text-xs font-bold">
+            <label className={labelClass}>
               Custom labels
-              <input value={draft.customLabels} onChange={(e) => setDraft({ ...draft, customLabels: e.target.value })} className="mt-1 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm" placeholder="JDM, Display" />
+              <input value={draft.customLabels} onChange={(e) => setDraft({ ...draft, customLabels: e.target.value })} className={fieldClass} placeholder="JDM, Display" />
             </label>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
-            <label className="block text-xs font-bold">
+            <label className={labelClass}>
               Image URL
               <div className="mt-1 flex gap-2">
-                <input value={draft.imageUrl} onChange={(e) => setDraft({ ...draft, imageUrl: e.target.value })} className="w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm" placeholder="https://…" />
-                <button type="button" onClick={addImageUrl} className="rounded-xl bg-sky-blue px-3 py-2 text-xs font-bold text-white">Add</button>
+                <input value={draft.imageUrl} onChange={(e) => setDraft({ ...draft, imageUrl: e.target.value })} className="w-full border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm" placeholder="https://…" />
+                <button type="button" onClick={addImageUrl} className="btn-ghost !px-3">Add</button>
               </div>
             </label>
-            <label className="flex cursor-pointer flex-col items-center justify-center gap-1 rounded-2xl border border-dashed border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-xs font-bold hover:border-sky-blue">
-              <ImagePlus size={18} />
+            <label className="flex cursor-pointer flex-col items-center justify-center gap-1 border border-dashed border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] hover:border-[#DA291C]/50">
+              <ImagePlus size={16} strokeWidth={1.5} />
               Upload
-              <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => onUpload(e.target.files)} />
+              <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => void onUpload(e.target.files)} />
             </label>
           </div>
 
-          <label className="block text-xs font-bold">
+          <label className={labelClass}>
             Notes
-            <textarea value={draft.notes} onChange={(e) => setDraft({ ...draft, notes: e.target.value })} rows={2} className="mt-1 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3 py-2 text-sm" />
+            <textarea value={draft.notes} onChange={(e) => setDraft({ ...draft, notes: e.target.value })} rows={2} className={fieldClass} />
           </label>
 
-          <div className="flex flex-wrap gap-3 text-sm font-semibold">
-            <label className="inline-flex items-center gap-2 rounded-xl bg-[var(--bg-soft)] px-3 py-2">
-              <input type="checkbox" checked={draft.starred} onChange={(e) => setDraft({ ...draft, starred: e.target.checked })} />
-              <Star size={14} className="text-brick-yellow" /> Starred
+          <div className="flex flex-wrap gap-2 text-sm">
+            <label className="inline-flex items-center gap-2 border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em]">
+              <input type="checkbox" checked={draft.starred} onChange={(e) => setDraft({ ...draft, starred: e.target.checked })} className="accent-[#DA291C]" />
+              <Star size={12} className="text-[#DA291C]" strokeWidth={1.5} /> Starred
             </label>
-            <label className="inline-flex items-center gap-2 rounded-xl bg-[var(--bg-soft)] px-3 py-2">
-              <input type="checkbox" checked={draft.featured} onChange={(e) => setDraft({ ...draft, featured: e.target.checked })} />
-              <Sparkles size={14} className="text-stud-red" /> Featured
+            <label className="inline-flex items-center gap-2 border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em]">
+              <input type="checkbox" checked={draft.featured} onChange={(e) => setDraft({ ...draft, featured: e.target.checked })} className="accent-[#DA291C]" />
+              <Sparkles size={12} className="text-[#DA291C]" strokeWidth={1.5} /> Featured
             </label>
-            <label className="inline-flex items-center gap-2 rounded-xl bg-[var(--bg-soft)] px-3 py-2">
-              <input type="checkbox" checked={draft.isWant} onChange={(e) => setDraft({ ...draft, isWant: e.target.checked })} />
-              Want list
+            <label className="inline-flex items-center gap-2 border border-[var(--border)] bg-[var(--bg-soft)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em]">
+              <input type="checkbox" checked={draft.isWant} onChange={(e) => setDraft({ ...draft, isWant: e.target.checked })} className="accent-[#DA291C]" />
+              Wishlist
             </label>
-            <label className="inline-flex items-center gap-2 text-xs">
+            <label className="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.1em] text-[var(--text-muted)]">
               Acquired
-              <input type="date" value={draft.acquiredAt} onChange={(e) => setDraft({ ...draft, acquiredAt: e.target.value })} className="rounded-xl border border-[var(--border)] bg-[var(--bg)] px-2 py-1.5" />
+              <input type="date" value={draft.acquiredAt} onChange={(e) => setDraft({ ...draft, acquiredAt: e.target.value })} className="border border-[var(--border)] bg-[var(--bg)] px-2 py-1.5 text-sm normal-case tracking-normal text-[var(--text)]" />
             </label>
           </div>
 
           <div className="flex justify-end gap-2 border-t border-[var(--border)] pt-4">
-            <button type="button" onClick={onClose} className="rounded-2xl px-4 py-2.5 text-sm font-bold hover:bg-[var(--bg-soft)]">Cancel</button>
-            <button type="submit" className="rounded-2xl bg-stud-red px-5 py-2.5 text-sm font-bold text-white shadow-lg shadow-stud-red/30 hover:brightness-110">
-              {editing ? 'Save changes' : 'Add to shelf'}
+            <button type="button" onClick={onClose} className="btn-ghost">Cancel</button>
+            <button type="submit" className="btn-primary">
+              {editing ? 'Save changes' : 'Add to collection'}
             </button>
           </div>
         </form>
