@@ -52,11 +52,11 @@ export function Sidebar({
         <div className="mb-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center border border-[#DA291C] text-[10px] font-semibold tracking-[0.15em] text-white">
-              SS
+              TP
             </div>
             <div>
-              <p className="font-display text-lg font-medium leading-tight tracking-wide text-white">Shelf Stories</p>
-              <p className="label-caps mt-0.5 text-[#8F8F8F]">Private Collection</p>
+              <p className="font-display text-lg font-medium leading-tight tracking-wide text-white">Tejas Playground</p>
+              <p className="label-caps mt-0.5 text-[#8F8F8F]">Lego and Hotwheels Collection</p>
             </div>
           </div>
           <button type="button" className="p-2 text-[#8F8F8F] hover:text-white md:hidden" onClick={onClose} aria-label="Close menu">
