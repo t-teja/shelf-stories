@@ -97,7 +97,7 @@ export default function App() {
   };
 
   const onDelete = async (item: CollectionItem) => {
-    if (confirm(`Remove "${item.name}" from the shelf?`)) {
+    if (confirm(`Remove “${item.name}” from the collection?`)) {
       await remove(item.id);
     }
   };
@@ -122,8 +122,10 @@ export default function App() {
     }
   };
 
+  const showHero = room === 'all' && !loading;
+
   return (
-    <div className="stud-bg flex min-h-svh">
+    <div className="flex min-h-svh bg-[var(--bg)]">
       <Sidebar
         room={room}
         onSelect={setRoom}
@@ -133,22 +135,22 @@ export default function App() {
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-30 flex items-center gap-2 border-b border-[var(--border)] bg-[var(--bg)]/90 px-3 py-3 backdrop-blur sm:px-5">
-          <button type="button" className="rounded-xl p-2 hover:bg-[var(--bg-soft)] md:hidden" onClick={() => setMenuOpen(true)} aria-label="Menu">
-            <Menu size={20} />
+        <header className="sticky top-0 z-30 flex items-center gap-2 border-b border-[var(--border)] bg-[var(--bg)]/95 px-3 py-3 backdrop-blur-md sm:px-6">
+          <button type="button" className="p-2 hover:bg-[var(--bg-soft)] md:hidden" onClick={() => setMenuOpen(true)} aria-label="Menu">
+            <Menu size={18} strokeWidth={1.5} />
           </button>
           <div className="min-w-0 flex-1 text-left">
-            <h1 className="truncate font-display text-lg font-bold sm:text-xl">{roomMeta.label}</h1>
-            <p className="truncate text-xs text-[var(--text-muted)]">{roomMeta.hint}</p>
+            <h1 className="truncate font-display text-lg font-medium tracking-wide sm:text-xl">{roomMeta.label}</h1>
+            <p className="label-caps truncate text-[var(--text-muted)]">{roomMeta.hint}</p>
           </div>
-          <button type="button" onClick={toggle} className="rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] p-2" aria-label="Toggle theme" title={theme === 'light' ? 'Dark cinema' : 'Light clay'}>
-            {theme === 'light' ? <Moon size={18} /> : <Sun size={18} />}
+          <button type="button" onClick={toggle} className="btn-ghost !p-2" aria-label="Toggle theme" title={theme === 'light' ? 'Dark mode' : 'Light mode'}>
+            {theme === 'light' ? <Moon size={16} strokeWidth={1.5} /> : <Sun size={16} strokeWidth={1.5} />}
           </button>
-          <button type="button" onClick={() => exportToJson(items)} className="inline-flex rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] p-2" title="Export JSON" aria-label="Export">
-            <Download size={18} />
+          <button type="button" onClick={() => exportToJson(items)} className="btn-ghost !p-2" title="Export JSON" aria-label="Export">
+            <Download size={16} strokeWidth={1.5} />
           </button>
-          <button type="button" onClick={() => importRef.current?.click()} className="inline-flex rounded-xl border border-[var(--border)] bg-[var(--bg-elevated)] p-2" title="Import JSON" aria-label="Import">
-            <Upload size={18} />
+          <button type="button" onClick={() => importRef.current?.click()} className="btn-ghost !p-2" title="Import JSON" aria-label="Import">
+            <Upload size={16} strokeWidth={1.5} />
           </button>
           <input
             ref={importRef}
@@ -163,22 +165,38 @@ export default function App() {
           <button
             type="button"
             onClick={() => openAdd(room === 'want')}
-            className="inline-flex items-center gap-1 rounded-2xl bg-stud-red px-3 py-2 text-sm font-bold text-white shadow-lg shadow-stud-red/25 hover:brightness-110"
+            className="btn-primary !px-3 !py-2"
           >
-            <Plus size={16} />
+            <Plus size={14} strokeWidth={2} />
             <span className="hidden sm:inline">Add</span>
           </button>
         </header>
 
-        <main className="flex-1 px-3 py-4 sm:px-5 sm:py-6">
+        {showHero && (
+          <div className="hero-strip">
+            <div className="px-3 sm:px-6">
+              <div className="rule-rosso mb-4" />
+              <h2>The Collection</h2>
+              <p>
+                {items.filter((i) => !i.isWant).length} pieces · {items.filter((i) => i.isWant).length} wishlist
+              </p>
+            </div>
+          </div>
+        )}
+
+        <main className={`flex-1 ${room === 'tv' ? 'p-0' : 'px-3 py-5 sm:px-6 sm:py-7'}`}>
           {loading ? (
-            <div className="flex h-64 items-center justify-center text-[var(--text-muted)]">Opening the museum…</div>
+            <div className="flex h-64 items-center justify-center">
+              <p className="label-caps text-[var(--text-muted)]">Loading collection…</p>
+            </div>
           ) : room === 'tv' ? (
-            <TVShowcase items={showcaseItems} onExit={() => setRoom('all')} />
+            <div className="p-3 sm:p-6">
+              <TVShowcase items={showcaseItems} onExit={() => setRoom('all')} />
+            </div>
           ) : room === 'studmap' ? (
             <StudMap items={visible} onSelect={openEdit} />
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-5">
               <FiltersBar
                 filters={filters}
                 onChange={setFilters}
@@ -191,19 +209,19 @@ export default function App() {
 
               {visible.length === 0 ? (
                 <EmptyState
-                  title={room === 'want' ? 'Want list is clear' : 'This room is empty'}
+                  title={room === 'want' ? 'Wishlist is clear' : 'No pieces here'}
                   hint={
                     room === 'want'
-                      ? 'Add dream cars, sets, and chase pieces you are still hunting.'
-                      : 'Add your first Hot Wheels, Lego, or Matchbox piece to bring this room to life.'
+                      ? 'Add cars, sets, and chase pieces you intend to acquire.'
+                      : 'Add your first piece to begin curating this room.'
                   }
                   action={
                     <button
                       type="button"
                       onClick={() => openAdd(room === 'want')}
-                      className="rounded-2xl bg-stud-red px-4 py-2.5 text-sm font-bold text-white"
+                      className="btn-primary"
                     >
-                      {room === 'want' ? 'Add a want' : 'Add an item'}
+                      {room === 'want' ? 'Add to wishlist' : 'Add a piece'}
                     </button>
                   }
                 />
@@ -233,8 +251,8 @@ export default function App() {
                 </div>
               )}
 
-              <p className="pt-2 text-center text-xs text-[var(--text-muted)]">
-                Showing {visible.length} · {items.filter((i) => !i.isWant).length} owned · {items.filter((i) => i.isWant).length} wants
+              <p className="pt-2 text-center text-[10px] uppercase tracking-[0.15em] text-[var(--text-muted)]">
+                Showing {visible.length} · {items.filter((i) => !i.isWant).length} owned · {items.filter((i) => i.isWant).length} wishlist
               </p>
             </div>
           )}

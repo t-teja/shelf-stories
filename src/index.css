@@ -3,40 +3,42 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-stud-red: #E31C23;
-  --color-brick-yellow: #FFD500;
-  --color-sky-blue: #00A3E0;
-  --color-clay: #F4F1EA;
-  --color-clay-dark: #1A1B22;
-  --color-ink: #1A1523;
-  --color-muted: #6B6375;
-  --font-display: "Space Grotesk", system-ui, sans-serif;
-  --font-body: "Nunito", system-ui, sans-serif;
+  --color-rosso: #DA291C;
+  --color-canvas: #181818;
+  --color-void: #000000;
+  --color-panel: #111111;
+  --color-surface: #1C1C1C;
+  --color-ink: #F5F5F5;
+  --color-silver: #8F8F8F;
+  --color-line: #2A2A2A;
+  --font-display: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-body: "Inter", "DM Sans", system-ui, sans-serif;
 }
 
 :root {
   color-scheme: light;
-  --bg: #F7F4EE;
-  --bg-elevated: #FFFEFB;
-  --bg-soft: #EEEAE2;
-  --text: #1A1523;
-  --text-muted: #6B6375;
-  --border: #E4DFD5;
-  --shadow: 0 10px 30px -12px rgba(26, 21, 35, 0.18);
-  --stud: #E31C23;
-  --brick: #FFD500;
-  --sky: #00A3E0;
+  --bg: #F4F4F4;
+  --bg-elevated: #FFFFFF;
+  --bg-soft: #ECECEC;
+  --text: #111111;
+  --text-muted: #6B6B6B;
+  --border: #D2D2D2;
+  --shadow: 0 20px 50px -24px rgba(0, 0, 0, 0.35);
+  --accent: #DA291C;
+  --hero: #000000;
 }
 
 .dark {
   color-scheme: dark;
-  --bg: #0E0F14;
-  --bg-elevated: #171821;
-  --bg-soft: #1F212C;
-  --text: #F4F1EA;
-  --text-muted: #A39EAE;
-  --border: #2C2E3A;
-  --shadow: 0 12px 40px -10px rgba(0, 0, 0, 0.55);
+  --bg: #181818;
+  --bg-elevated: #111111;
+  --bg-soft: #1C1C1C;
+  --text: #F5F5F5;
+  --text-muted: #8F8F8F;
+  --border: #2A2A2A;
+  --shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.75);
+  --accent: #DA291C;
+  --hero: #000000;
 }
 
 * {
@@ -53,49 +55,116 @@ body {
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
+  letter-spacing: 0.01em;
 }
 
 h1, h2, h3, .font-display {
   font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
-/* Clay card */
-.clay-card {
+.label-caps {
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Flat dark matte panel — Ferrari editorial card */
+.panel {
   background: var(--bg-elevated);
   border: 1px solid var(--border);
-  border-radius: 1.25rem;
+  border-radius: 2px;
+  box-shadow: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.panel:hover {
+  border-color: color-mix(in oklab, var(--accent) 45%, var(--border));
   box-shadow: var(--shadow);
-  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  transform: translateY(-2px);
 }
 
-.clay-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 36px -14px rgba(227, 28, 35, 0.22);
+.surface {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 2px;
 }
 
-.dark .clay-card:hover {
-  box-shadow: 0 16px 40px -12px rgba(0, 163, 224, 0.25);
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid var(--accent);
+  border-radius: 1px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.65rem 1.1rem;
+  transition: brightness 0.2s ease, background 0.2s ease;
 }
 
-/* Stud pattern backdrop */
-.stud-bg {
-  background-image:
-    radial-gradient(circle at 12px 12px, color-mix(in oklab, var(--stud) 12%, transparent) 3px, transparent 4px),
-    radial-gradient(circle at 36px 36px, color-mix(in oklab, var(--sky) 10%, transparent) 3px, transparent 4px);
-  background-size: 48px 48px;
+.btn-primary:hover {
+  filter: brightness(1.08);
 }
 
-.dark .stud-bg {
-  background-image:
-    radial-gradient(circle at 12px 12px, rgba(227, 28, 35, 0.12) 3px, transparent 4px),
-    radial-gradient(circle at 36px 36px, rgba(0, 163, 224, 0.1) 3px, transparent 4px);
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 1px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.55rem 0.9rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.btn-ghost:hover {
+  border-color: var(--text);
+  background: color-mix(in oklab, var(--text) 4%, transparent);
+}
+
+.hero-strip {
+  background: var(--hero);
+  color: #fff;
+  border-bottom: 1px solid #2A2A2A;
+  padding: 2.75rem 0 2.25rem;
+}
+
+.hero-strip h2 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(1.75rem, 4vw, 2.75rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.hero-strip p {
+  margin: 0.75rem 0 0;
+  color: #8F8F8F;
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 /* Scrollbars */
-::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-thumb {
-  background: color-mix(in oklab, var(--text-muted) 40%, transparent);
-  border-radius: 999px;
+  background: color-mix(in oklab, var(--text-muted) 45%, transparent);
+  border-radius: 0;
 }
 
 /* Ken Burns */
@@ -110,36 +179,34 @@ h1, h2, h3, .font-display {
 }
 
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-in {
-  animation: fade-in 0.35s ease both;
-}
-
-@keyframes pulse-stud {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(227, 28, 35, 0.35); }
-  50% { box-shadow: 0 0 0 8px rgba(227, 28, 35, 0); }
-}
-
-.pulse-stud {
-  animation: pulse-stud 2s infinite;
+  animation: fade-in 0.4s ease both;
 }
 
 /* Modal backdrop */
 .modal-backdrop {
-  background: rgba(14, 15, 20, 0.55);
-  backdrop-filter: blur(6px);
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(8px);
 }
 
-/* Focus ring */
+/* Focus ring — quiet rosso */
 :focus-visible {
-  outline: 2px solid var(--sky);
+  outline: 1px solid var(--accent);
   outline-offset: 2px;
 }
 
 /* TV mode hide chrome */
 .tv-mode body {
   overflow: hidden;
+}
+
+/* Thin editorial rule */
+.rule-rosso {
+  height: 1px;
+  background: var(--accent);
+  width: 2.5rem;
 }

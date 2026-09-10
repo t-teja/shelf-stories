@@ -57,38 +57,39 @@ export const COLORS: ColorFamily[] = [
   'Black', 'White', 'Silver', 'Gold', 'Pink', 'Multi', 'Other',
 ];
 
+/** Understated brand accents — used sparingly for tiny indicators only */
 export const BRAND_COLORS: Record<Brand, string> = {
-  'Hot Wheels': '#E31C23',
-  Lego: '#FFD500',
-  Matchbox: '#F97316',
-  Mattel: '#00A3E0',
-  Other: '#8B5CF6',
+  'Hot Wheels': '#DA291C',
+  Lego: '#8F8F8F',
+  Matchbox: '#A0A0A0',
+  Mattel: '#B0B0B0',
+  Other: '#6B6B6B',
 };
 
 export const COLOR_HEX: Record<ColorFamily, string> = {
-  Red: '#E31C23',
-  Blue: '#00A3E0',
-  Yellow: '#FFD500',
-  Green: '#22C55E',
-  Orange: '#F97316',
-  Purple: '#8B5CF6',
-  Black: '#1F2937',
-  White: '#F8FAFC',
-  Silver: '#94A3B8',
-  Gold: '#EAB308',
-  Pink: '#EC4899',
-  Multi: '#A855F7',
-  Other: '#64748B',
+  Red: '#DA291C',
+  Blue: '#4A6FA5',
+  Yellow: '#C4A35A',
+  Green: '#4F7A5A',
+  Orange: '#B86B3D',
+  Purple: '#6B5B7A',
+  Black: '#1A1A1A',
+  White: '#F5F5F5',
+  Silver: '#8F8F8F',
+  Gold: '#B8963E',
+  Pink: '#A86B7A',
+  Multi: '#6B6B6B',
+  Other: '#6B6B6B',
 };
 
 export const ROOMS: { id: Room; label: string; hint: string }[] = [
-  { id: 'all', label: 'All Library', hint: 'Everything on the shelves' },
+  { id: 'all', label: 'The Collection', hint: 'Full inventory' },
   { id: 'garage', label: 'Garage', hint: 'Cars · Hot Wheels · Matchbox' },
   { id: 'brickyard', label: 'Brick Yard', hint: 'Lego · Technic · Sets' },
-  { id: 'treasure', label: 'Treasure Room', hint: 'Premium & starred finds' },
-  { id: 'sky', label: 'Sky Hangar', hint: 'Flights & sky toys' },
+  { id: 'treasure', label: 'Vault', hint: 'Premium & starred pieces' },
+  { id: 'sky', label: 'Hangar', hint: 'Flights & aviation' },
   { id: 'paddock', label: 'Paddock', hint: 'Formula 1 machines' },
-  { id: 'want', label: 'Want List', hint: 'Dreams still hunting' },
-  { id: 'studmap', label: 'Stud Map', hint: 'Visual wall of covers' },
-  { id: 'tv', label: 'TV Showcase', hint: 'Cinema slideshow mode' },
+  { id: 'want', label: 'Wishlist', hint: 'Acquisitions ahead' },
+  { id: 'studmap', label: 'Gallery Wall', hint: 'Visual cover grid' },
+  { id: 'tv', label: 'Showcase', hint: 'Cinematic presentation' },
 ];
