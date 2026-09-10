@@ -75,7 +75,7 @@ export function TVShowcase({
     return (
       <EmptyState
         title="Showcase is empty"
-        hint="Star or feature a few pieces, then return for a cinematic presentation."
+        hint="Edit any piece → change photos · Star/Feature to pin. Add owned pieces to fill the showcase."
         action={
           <button type="button" onClick={onExit} className="btn-primary">
             Back to collection
@@ -148,6 +148,9 @@ export function TVShowcase({
           <input type="checkbox" checked={featuredOnly} onChange={(e) => setFeaturedOnly(e.target.checked)} className="accent-[#DA291C]" />
           Featured playlist
         </label>
+        <span className="hidden text-[9px] tracking-wide text-white/30 sm:inline">
+          Edit any piece → change photos · Star/Feature to pin
+        </span>
         <button type="button" onClick={onExit} className="btn-primary ml-auto !py-2 !text-[10px]">
           <X size={12} /> Exit
         </button>
