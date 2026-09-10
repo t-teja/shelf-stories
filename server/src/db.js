@@ -1,7 +1,7 @@
 import Database from 'better-sqlite3';
 import fs from 'node:fs';
 import path from 'node:path';
-import { createSeedItems } from './seed.js';
+import { createSeedItems, SEED_VERSION } from './seed.js';
 
 const DATA_DIR = process.env.DATA_DIR || path.resolve(process.cwd(), '../data');
 const DB_PATH = process.env.DB_PATH || path.join(DATA_DIR, 'shelf-stories.sqlite');
@@ -224,13 +224,13 @@ export function findDuplicates(q) {
 }
 
 export function seedIfEmpty() {
-  const count = db.prepare('SELECT COUNT(*) AS c FROM items').get().c;
-  const seeded = getMeta('seeded');
-  if (count === 0 && !seeded) {
+  const version = getMeta('seedVersion');
+  if (version !== SEED_VERSION) {
     const seed = createSeedItems();
-    putAllItems(seed);
+    replaceAllItems(seed);
     setMeta('seeded', true);
-    console.log(`[shelf-stories] Seeded ${seed.length} starter items into ${DB_PATH}`);
+    setMeta('seedVersion', SEED_VERSION);
+    console.log(`[tejas-playground] Re-seeded ${seed.length} items (v=${SEED_VERSION}) into ${DB_PATH}`);
     return seed.length;
   }
   return 0;

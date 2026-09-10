@@ -117,12 +117,12 @@ app.delete('/api/items/:id', (req, res) => {
 app.get('/api/export', (_req, res) => {
   const items = getAllItems();
   const payload = {
-    app: 'Shelf Stories',
+    app: 'Tejas Playground',
     version: 1,
     exportedAt: new Date().toISOString(),
     items,
   };
-  res.setHeader('Content-Disposition', `attachment; filename="shelf-stories-${new Date().toISOString().slice(0, 10)}.json"`);
+  res.setHeader('Content-Disposition', `attachment; filename="tejas-playground-${new Date().toISOString().slice(0, 10)}.json"`);
   res.json(payload);
 });
 
