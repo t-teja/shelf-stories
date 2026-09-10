@@ -3,11 +3,13 @@ import { COLOR_HEX } from '../types';
 
 export function ColorChip({ color, label }: { color: ColorFamily; label?: boolean }) {
   const hex = COLOR_HEX[color];
-  const border = color === 'White' || color === 'Yellow' ? '1px solid #D4D0C8' : '1px solid transparent';
+  const border = color === 'White' || color === 'Yellow' || color === 'Silver'
+    ? '1px solid #4A4A4A'
+    : '1px solid transparent';
   return (
-    <span className="inline-flex items-center gap-1.5 text-xs text-[var(--text-muted)]">
+    <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.08em] text-[var(--text-muted)]">
       <span
-        className="inline-block h-3.5 w-3.5 rounded-full shadow-sm"
+        className="inline-block h-2 w-2 rounded-full"
         style={{ background: hex, border }}
         title={color}
       />
