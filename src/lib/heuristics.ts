@@ -85,16 +85,16 @@ export function analyzeItemText(input: {
 
 export function placeholderGradient(brand: Brand, color: ColorFamily): string {
   const brandHex: Record<Brand, string> = {
-    'Hot Wheels': '#E31C23',
-    Lego: '#FFD500',
-    Matchbox: '#F97316',
-    Mattel: '#00A3E0',
-    Other: '#8B5CF6',
+    'Hot Wheels': '#DA291C',
+    Lego: '#2A2A2A',
+    Matchbox: '#3A3A3A',
+    Mattel: '#444444',
+    Other: '#333333',
   };
   const colorHex: Record<ColorFamily, string> = {
-    Red: '#E31C23', Blue: '#00A3E0', Yellow: '#FFD500', Green: '#22C55E',
-    Orange: '#F97316', Purple: '#8B5CF6', Black: '#374151', White: '#E2E8F0',
-    Silver: '#94A3B8', Gold: '#EAB308', Pink: '#EC4899', Multi: '#A855F7', Other: '#64748B',
+    Red: '#DA291C', Blue: '#2A3A4A', Yellow: '#3A3420', Green: '#1E2E24',
+    Orange: '#3A2818', Purple: '#2A2430', Black: '#111111', White: '#2A2A2A',
+    Silver: '#2A2A2A', Gold: '#3A3020', Pink: '#2E2024', Multi: '#222222', Other: '#1A1A1A',
   };
   return `linear-gradient(135deg, ${brandHex[brand]} 0%, ${colorHex[color]} 100%)`;
 }

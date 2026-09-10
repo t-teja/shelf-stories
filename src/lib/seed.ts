@@ -3,19 +3,19 @@ import { brandInitial } from './heuristics';
 
 function svgPlaceholder(brand: CollectionItem['brand'], color: CollectionItem['color'], label: string): string {
   const brandHex: Record<string, string> = {
-    'Hot Wheels': '#E31C23',
-    Lego: '#FFD500',
-    Matchbox: '#F97316',
-    Mattel: '#00A3E0',
-    Other: '#8B5CF6',
+    'Hot Wheels': '#DA291C',
+    Lego: '#1A1A1A',
+    Matchbox: '#222222',
+    Mattel: '#2A2A2A',
+    Other: '#181818',
   };
   const colorHex: Record<string, string> = {
-    Red: '#E31C23', Blue: '#00A3E0', Yellow: '#FFD500', Green: '#22C55E',
-    Orange: '#F97316', Purple: '#8B5CF6', Black: '#374151', White: '#E2E8F0',
-    Silver: '#94A3B8', Gold: '#EAB308', Pink: '#EC4899', Multi: '#A855F7', Other: '#64748B',
+    Red: '#3A1010', Blue: '#1A2430', Yellow: '#2A2418', Green: '#142018',
+    Orange: '#2A1C12', Purple: '#1E1824', Black: '#0A0A0A', White: '#2A2A2A',
+    Silver: '#242424', Gold: '#2A2418', Pink: '#24181C', Multi: '#1A1A1A', Other: '#141414',
   };
-  const c1 = brandHex[brand] ?? '#E31C23';
-  const c2 = colorHex[color] ?? '#00A3E0';
+  const c1 = brandHex[brand] ?? '#111111';
+  const c2 = colorHex[color] ?? '#1A1A1A';
   const initial = brandInitial(brand);
   const safe = label.replace(/[<>&']/g, '');
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480" viewBox="0 0 640 480">
@@ -25,13 +25,11 @@ function svgPlaceholder(brand: CollectionItem['brand'], color: CollectionItem['c
       <stop offset="100%" stop-color="${c2}"/>
     </linearGradient>
   </defs>
-  <rect width="640" height="480" rx="28" fill="url(#g)"/>
-  <circle cx="90" cy="90" r="28" fill="rgba(255,255,255,0.25)"/>
-  <circle cx="90" cy="90" r="14" fill="rgba(255,255,255,0.45)"/>
-  <circle cx="550" cy="390" r="36" fill="rgba(0,0,0,0.15)"/>
-  <text x="320" y="220" text-anchor="middle" font-family="system-ui,sans-serif" font-size="72" font-weight="800" fill="rgba(255,255,255,0.95)">${initial}</text>
-  <text x="320" y="290" text-anchor="middle" font-family="system-ui,sans-serif" font-size="28" font-weight="700" fill="rgba(255,255,255,0.9)">${safe.slice(0, 28)}</text>
-  <text x="320" y="330" text-anchor="middle" font-family="system-ui,sans-serif" font-size="16" fill="rgba(255,255,255,0.7)">${brand}</text>
+  <rect width="640" height="480" fill="url(#g)"/>
+  <rect x="24" y="24" width="592" height="432" fill="none" stroke="rgba(218,41,28,0.35)" stroke-width="1"/>
+  <text x="320" y="220" text-anchor="middle" font-family="Georgia,serif" font-size="56" font-weight="500" fill="#F5F5F5">${initial}</text>
+  <text x="320" y="280" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" font-weight="500" letter-spacing="3" fill="#8F8F8F">${safe.slice(0, 28)}</text>
+  <text x="320" y="320" text-anchor="middle" font-family="system-ui,sans-serif" font-size="12" letter-spacing="4" fill="#6B6B6B">${brand.toUpperCase()}</text>
 </svg>`;
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
