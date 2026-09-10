@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'docs/screenshots/*.b64'
+      - 'docs/screenshots/*.b64.*'
       - '.github/workflows/decode-screenshots.yml'
   workflow_dispatch:
 permissions:
@@ -16,6 +17,11 @@ jobs:
         run: |
           set -euo pipefail
           for name in showcase collection paddock; do
+            if ls docs/screenshots/${name}.b64.* >/dev/null 2>&1; then
+              cat docs/screenshots/${name}.b64.* > "docs/screenshots/${name}.b64"
+              echo "assembled ${name}.b64 from parts ($(wc -c < docs/screenshots/${name}.b64) bytes)"
+              rm -f docs/screenshots/${name}.b64.*
+            fi
             if [ -f "docs/screenshots/${name}.b64" ]; then
               base64 -d "docs/screenshots/${name}.b64" > "docs/screenshots/${name}.jpg"
               echo "decoded ${name}.jpg ($(wc -c < docs/screenshots/${name}.jpg) bytes)"
