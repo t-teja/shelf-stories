@@ -1,4 +1,4 @@
-import { Star, Sparkles, Trash2, Pencil } from 'lucide-react';
+import { Star, Sparkles, Trash2, Pencil, ExternalLink } from 'lucide-react';
 import type { CollectionItem } from '../types';
 import { BrandBadge } from './BrandBadge';
 import { ColorChip } from './ColorChip';
@@ -15,6 +15,9 @@ export function ItemCard({
   onDelete: (item: CollectionItem) => void;
 }) {
   const cover = item.images[item.primaryImageIndex] ?? item.images[0];
+  const qty = item.quantity ?? 1;
+  const showPrice = item.price != null && !Number.isNaN(item.price);
+  const code = item.sku || item.modelNumber;
 
   return (
     <article className="panel group overflow-hidden animate-in">
@@ -29,6 +32,11 @@ export function ItemCard({
           {item.featured && (
             <span className="inline-flex items-center gap-0.5 border border-[#DA291C]/80 bg-black/60 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-[0.1em] text-white backdrop-blur-sm">
               <Sparkles size={9} /> Featured
+            </span>
+          )}
+          {qty > 1 && (
+            <span className="border border-white/10 bg-black/50 px-1.5 py-0.5 text-[9px] font-medium uppercase tracking-[0.1em] text-white backdrop-blur-sm">
+              ×{qty}
             </span>
           )}
         </div>
@@ -46,10 +54,17 @@ export function ItemCard({
         <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase tracking-[0.08em] text-[var(--text-muted)]">
           <span className="border border-[var(--border)] px-1.5 py-0.5">{item.category}</span>
           <ColorChip color={item.color} />
+          {showPrice && (
+            <span className="font-mono normal-case tracking-wider">{item.price!.toFixed(2)}</span>
+          )}
         </div>
-        {(item.sku || item.modelNumber) && (
-          <p className="truncate font-mono text-[10px] tracking-wider text-[var(--text-muted)]">
-            {item.sku || item.modelNumber}
+        {(code || item.purchasedFrom) && (
+          <p className="truncate text-[10px] tracking-wider text-[var(--text-muted)]">
+            {code && <span className="font-mono">{code}</span>}
+            {code && item.purchasedFrom && <span className="mx-1.5 opacity-40">·</span>}
+            {item.purchasedFrom && (
+              <span className="font-sans normal-case tracking-normal opacity-70">{item.purchasedFrom}</span>
+            )}
           </p>
         )}
         <div className="flex gap-2 pt-1 opacity-70 transition group-hover:opacity-100">
@@ -60,6 +75,18 @@ export function ItemCard({
           >
             <Pencil size={11} strokeWidth={1.5} /> Edit
           </button>
+          {item.productLink && (
+            <a
+              href={item.productLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center border border-[var(--border)] px-2 py-1.5 text-[10px] text-[var(--text-muted)] hover:border-[var(--text)] hover:text-[var(--text)]"
+              aria-label="Product link"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ExternalLink size={11} strokeWidth={1.5} />
+            </a>
+          )}
           <button
             type="button"
             onClick={() => onDelete(item)}

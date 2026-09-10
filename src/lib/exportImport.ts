@@ -21,14 +21,23 @@ export async function parseImportFile(file: File): Promise<CollectionItem[]> {
   const data = JSON.parse(text);
   const items: CollectionItem[] = Array.isArray(data) ? data : data.items;
   if (!Array.isArray(items)) throw new Error('Invalid Tejas Playground export');
-  return items.map((item) => ({
-    ...item,
-    tags: item.tags ?? [],
-    customLabels: item.customLabels ?? [],
-    images: item.images ?? [],
-    primaryImageIndex: item.primaryImageIndex ?? 0,
-    starred: !!item.starred,
-    featured: !!item.featured,
-    isWant: !!item.isWant,
-  }));
+  return items.map((item) => {
+    const qty = typeof item.quantity === 'number' && item.quantity >= 1 ? item.quantity : 1;
+    const price = typeof item.price === 'number' && !Number.isNaN(item.price) ? item.price : undefined;
+    return {
+      ...item,
+      tags: item.tags ?? [],
+      customLabels: item.customLabels ?? [],
+      images: item.images ?? [],
+      primaryImageIndex: item.primaryImageIndex ?? 0,
+      starred: !!item.starred,
+      featured: !!item.isWant,
+      isWant: !!item.isWant,
+      price,
+      purchasedFrom: item.purchasedFrom?.trim() || undefined,
+      productLink: item.productLink?.trim() || undefined,
+      quantity: qty,
+      acquiredAt: item.acquiredAt || undefined,
+    };
+  });
 }
