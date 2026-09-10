@@ -16,19 +16,33 @@ jobs:
       - name: Decode .b64 to .jpg
         run: |
           set -euo pipefail
-          for name in showcase collection paddock; do
-            if ls docs/screenshots/${name}.b64.* >/dev/null 2>&1; then
-              cat $(ls docs/screenshots/${name}.b64.* | sort -V) > "docs/screenshots/${name}.b64"
-              echo "assembled ${name}.b64 from parts ($(wc -c < docs/screenshots/${name}.b64) bytes)"
-              rm -f docs/screenshots/${name}.b64.*
+          decode_one() {
+            local name="$1" expected="$2"
+            local parts
+            mapfile -t parts < <(ls docs/screenshots/${name}.b64.* 2>/dev/null | sort -V || true)
+            if [ "${#parts[@]}" -eq "$expected" ]; then
+              cat "${parts[@]}" > "docs/screenshots/${name}.b64"
+              echo "assembled ${name}.b64 from ${expected} parts ($(wc -c < docs/screenshots/${name}.b64) bytes)"
+              rm -f "${parts[@]}"
+            elif [ "${#parts[@]}" -gt 0 ]; then
+              echo "skipping ${name}: have ${#parts[@]}/${expected} parts (wait for all)"
             fi
             if [ -f "docs/screenshots/${name}.b64" ]; then
               base64 -d "docs/screenshots/${name}.b64" > "docs/screenshots/${name}.jpg"
-              echo "decoded ${name}.jpg ($(wc -c < docs/screenshots/${name}.jpg) bytes)"
+              local sz
+              sz=$(wc -c < "docs/screenshots/${name}.jpg")
+              echo "decoded ${name}.jpg (${sz} bytes)"
+              if [ "$sz" -lt 20000 ]; then
+                echo "ERROR: ${name}.jpg too small (${sz}); refusing commit"
+                rm -f "docs/screenshots/${name}.jpg"
+                exit 1
+              fi
               rm -f "docs/screenshots/${name}.b64"
             fi
-          done
-          # remove broken test/svg leftovers if present
+          }
+          decode_one showcase 12
+          decode_one collection 12
+          decode_one paddock 14
           rm -f docs/screenshots/pixel.jpg docs/screenshots/*.svg || true
       - name: Commit JPEGs
         run: |
