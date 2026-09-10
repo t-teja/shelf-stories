@@ -21,6 +21,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
@@ -28,7 +31,6 @@ jobs:
           cache: npm
 
       - name: Install
-        # Use npm install (not npm ci) so a stub/incomplete lockfile cannot break Pages.
         run: npm install --no-fund --no-audit
 
       - name: Build (IndexedDB / local mode for Pages)
