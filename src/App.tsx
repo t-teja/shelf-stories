@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Download, Menu, Moon, Plus, Sun, Upload } from 'lucide-react';
 import { useCollection } from './hooks/useCollection';
 import { useTheme } from './hooks/useTheme';
@@ -37,6 +37,20 @@ export default function App() {
   } = useCollection();
 
   const [menuOpen, setMenuOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem('tp-sidebar-collapsed') === '1';
+    } catch {
+      return false;
+    }
+  });
+  useEffect(() => {
+    try {
+      localStorage.setItem('tp-sidebar-collapsed', sidebarCollapsed ? '1' : '0');
+    } catch {
+      /* ignore */
+    }
+  }, [sidebarCollapsed]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<CollectionItem | null>(null);
   const [initialWant, setInitialWant] = useState(false);
@@ -51,7 +65,7 @@ export default function App() {
     c.all = owned.length;
     c.garage = owned.filter((i) => i.brand === 'Hot Wheels' || i.brand === 'Matchbox' || i.category === 'Cars').length;
     c.brickyard = owned.filter((i) => i.brand === 'Lego' || i.category === 'Technic' || i.category === 'Sets').length;
-    c.treasure = owned.filter((i) => i.category === 'Premium' || i.starred || i.featured).length;
+    c.treasure = owned.filter((i) => i.category === 'Premium' || i.category === 'F1' || i.category === 'Technic' || i.starred || i.featured).length;
     c.sky = owned.filter((i) => i.category === 'Flights').length;
     c.paddock = owned.filter((i) => i.category === 'F1').length;
     c.want = items.filter((i) => i.isWant).length;
@@ -132,6 +146,8 @@ export default function App() {
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
         counts={counts}
+        collapsed={sidebarCollapsed}
+        onToggleCollapse={() => setSidebarCollapsed((c) => !c)}
       />
 
       <div className="flex min-w-0 flex-1 flex-col">
