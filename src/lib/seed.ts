@@ -2,7 +2,7 @@ import type { CollectionItem } from '../types';
 import { brandInitial } from './heuristics';
 
 /** Bump when seed catalog changes so IndexedDB / server DB re-seed. */
-export const SEED_VERSION = 'tejas-playground-v2';
+export const SEED_VERSION = 'tejas-playground-v3';
 
 const CDN = (id: string) => `https://cdn.rebrickable.com/media/sets/${id}-1.jpg`;
 
@@ -124,7 +124,7 @@ export function createSeedItems(): CollectionItem[] {
       customLabels: ['Owned', 'Paddock', 'F1 2024'],
       notes: '2024 F1 — Mercedes-AMG PETRONAS W15.',
       starred: true,
-      featured: false,
+      featured: true,
       isWant: false,
       acquiredAt: '2024-03-01',
       imageUrl: CDN('77244'),
@@ -140,8 +140,8 @@ export function createSeedItems(): CollectionItem[] {
       tags: ['Lego', 'F1', 'Speed Champions', '2024', 'Aston Martin'],
       customLabels: ['Owned', 'Paddock', 'F1 2024'],
       notes: '2024 F1 — Aston Martin Aramco AMR24.',
-      starred: false,
-      featured: false,
+      starred: true,
+      featured: true,
       isWant: false,
       acquiredAt: '2024-04-02',
       imageUrl: CDN('77245'),
@@ -157,8 +157,8 @@ export function createSeedItems(): CollectionItem[] {
       tags: ['Lego', 'F1', 'Speed Champions', '2024', 'VCARB', 'RB'],
       customLabels: ['Owned', 'Paddock', 'F1 2024'],
       notes: '2024 F1 — Visa Cash App RB VCARB 01.',
-      starred: false,
-      featured: false,
+      starred: true,
+      featured: true,
       isWant: false,
       acquiredAt: '2024-04-05',
       imageUrl: CDN('77246'),
@@ -174,8 +174,8 @@ export function createSeedItems(): CollectionItem[] {
       tags: ['Lego', 'F1', 'Speed Champions', '2024', 'Sauber', 'Stake'],
       customLabels: ['Owned', 'Paddock', 'F1 2024'],
       notes: '2024 F1 — KICK Sauber C44.',
-      starred: false,
-      featured: false,
+      starred: true,
+      featured: true,
       isWant: false,
       acquiredAt: '2024-04-08',
       imageUrl: CDN('77247'),
@@ -191,8 +191,8 @@ export function createSeedItems(): CollectionItem[] {
       tags: ['Lego', 'F1', 'Speed Champions', '2024', 'Alpine'],
       customLabels: ['Owned', 'Paddock', 'F1 2024'],
       notes: '2024 F1 — BWT Alpine A524.',
-      starred: false,
-      featured: false,
+      starred: true,
+      featured: true,
       isWant: false,
       acquiredAt: '2024-04-10',
       imageUrl: CDN('77248'),
@@ -208,8 +208,8 @@ export function createSeedItems(): CollectionItem[] {
       tags: ['Lego', 'F1', 'Speed Champions', '2024', 'Williams'],
       customLabels: ['Owned', 'Paddock', 'F1 2024'],
       notes: '2024 F1 — Williams Racing FW46.',
-      starred: false,
-      featured: false,
+      starred: true,
+      featured: true,
       isWant: false,
       acquiredAt: '2024-04-12',
       imageUrl: CDN('77249'),
@@ -225,8 +225,8 @@ export function createSeedItems(): CollectionItem[] {
       tags: ['Lego', 'F1', 'Speed Champions', '2024', 'Haas'],
       customLabels: ['Owned', 'Paddock', 'F1 2024'],
       notes: '2024 F1 — MoneyGram Haas VF-24.',
-      starred: false,
-      featured: false,
+      starred: true,
+      featured: true,
       isWant: false,
       acquiredAt: '2024-04-15',
       imageUrl: CDN('77250'),
