@@ -25,7 +25,13 @@ function roomFilter(room: Room, item: CollectionItem): boolean {
     case 'brickyard':
       return !item.isWant && (item.brand === 'Lego' || item.category === 'Technic' || item.category === 'Sets');
     case 'treasure':
-      return !item.isWant && (item.category === 'Premium' || item.starred || item.featured);
+      return !item.isWant && (
+        item.category === 'Premium' ||
+        item.category === 'F1' ||
+        item.category === 'Technic' ||
+        item.starred ||
+        item.featured
+      );
     case 'sky':
       return !item.isWant && item.category === 'Flights';
     case 'paddock':
@@ -159,9 +165,14 @@ export function useCollection() {
   }, [items, room, filters, sort]);
 
   const showcaseItems = useMemo(() => {
-    const featured = items.filter((i) => !i.isWant && (i.featured || i.starred));
-    if (featured.length > 0) return featured;
-    return items.filter((i) => !i.isWant);
+    return items
+      .filter((i) => !i.isWant)
+      .sort((a, b) => {
+        const pinA = a.featured || a.starred ? 1 : 0;
+        const pinB = b.featured || b.starred ? 1 : 0;
+        if (pinB !== pinA) return pinB - pinA;
+        return b.createdAt.localeCompare(a.createdAt);
+      });
   }, [items]);
 
   return {
