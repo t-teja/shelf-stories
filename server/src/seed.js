@@ -10,6 +10,7 @@ function mk(i, partial) {
   return {
     ...rest,
     id: id ?? `seed-${i}`,
+    quantity: rest.quantity ?? 1,
     images: [imageUrl],
     primaryImageIndex: 0,
     createdAt: new Date(now - i * 86400000).toISOString(),

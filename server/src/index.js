@@ -67,6 +67,7 @@ app.post('/api/items', (req, res) => {
     return res.status(400).json({ error: 'name, brand, category, color required' });
   }
   const now = new Date().toISOString();
+  const qty = body.quantity == null ? 1 : Number(body.quantity);
   const item = {
     id: body.id || randomUUID(),
     name: body.name,
@@ -85,6 +86,10 @@ app.post('/api/items', (req, res) => {
     featured: !!body.featured,
     isWant: !!body.isWant,
     acquiredAt: body.acquiredAt,
+    price: body.price == null || body.price === '' ? undefined : Number(body.price),
+    purchasedFrom: body.purchasedFrom,
+    productLink: body.productLink,
+    quantity: Number.isFinite(qty) && qty >= 1 ? qty : 1,
     createdAt: body.createdAt || now,
     updatedAt: body.updatedAt || now,
   };
@@ -133,19 +138,28 @@ app.post('/api/import', (req, res) => {
   if (!Array.isArray(items)) {
     return res.status(400).json({ error: 'Expected { items: [], mode?: "replace"|"merge" }' });
   }
-  const normalized = items.map((item) => ({
-    ...item,
-    id: item.id || randomUUID(),
-    tags: item.tags ?? [],
-    customLabels: item.customLabels ?? [],
-    images: item.images ?? [],
-    primaryImageIndex: item.primaryImageIndex ?? 0,
-    starred: !!item.starred,
-    featured: !!item.featured,
-    isWant: !!item.isWant,
-    createdAt: item.createdAt || new Date().toISOString(),
-    updatedAt: item.updatedAt || new Date().toISOString(),
-  }));
+  const normalized = items.map((item) => {
+    const qty = item.quantity == null ? 1 : Number(item.quantity);
+    const price = item.price == null || item.price === '' ? undefined : Number(item.price);
+    return {
+      ...item,
+      id: item.id || randomUUID(),
+      tags: item.tags ?? [],
+      customLabels: item.customLabels ?? [],
+      images: item.images ?? [],
+      primaryImageIndex: item.primaryImageIndex ?? 0,
+      starred: !!item.starred,
+      featured: !!item.featured,
+      isWant: !!item.isWant,
+      price: Number.isFinite(price) ? price : undefined,
+      purchasedFrom: item.purchasedFrom || undefined,
+      productLink: item.productLink || undefined,
+      quantity: Number.isFinite(qty) && qty >= 1 ? qty : 1,
+      acquiredAt: item.acquiredAt || undefined,
+      createdAt: item.createdAt || new Date().toISOString(),
+      updatedAt: item.updatedAt || new Date().toISOString(),
+    };
+  });
 
   if (mode === 'merge') {
     putAllItems(normalized);

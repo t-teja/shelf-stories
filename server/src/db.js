@@ -33,6 +33,10 @@ db.exec(`
     featured INTEGER NOT NULL DEFAULT 0,
     isWant INTEGER NOT NULL DEFAULT 0,
     acquiredAt TEXT,
+    price REAL,
+    purchasedFrom TEXT,
+    productLink TEXT,
+    quantity INTEGER DEFAULT 1,
     createdAt TEXT NOT NULL,
     updatedAt TEXT NOT NULL
   );
@@ -47,8 +51,21 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_items_sku ON items(sku);
 `);
 
+/** Add columns on existing SQLite DBs created before purchase/inventory fields. */
+function ensureColumn(column, typeSql) {
+  const cols = db.prepare('PRAGMA table_info(items)').all();
+  if (!cols.some((c) => c.name === column)) {
+    db.exec(`ALTER TABLE items ADD COLUMN ${column} ${typeSql}`);
+  }
+}
+ensureColumn('price', 'REAL');
+ensureColumn('purchasedFrom', 'TEXT');
+ensureColumn('productLink', 'TEXT');
+ensureColumn('quantity', 'INTEGER DEFAULT 1');
+
 function rowToItem(row) {
   if (!row) return null;
+  const qty = row.quantity == null ? 1 : Number(row.quantity);
   return {
     id: row.id,
     name: row.name,
@@ -67,12 +84,17 @@ function rowToItem(row) {
     featured: !!row.featured,
     isWant: !!row.isWant,
     acquiredAt: row.acquiredAt ?? undefined,
+    price: row.price == null ? undefined : Number(row.price),
+    purchasedFrom: row.purchasedFrom ?? undefined,
+    productLink: row.productLink ?? undefined,
+    quantity: Number.isFinite(qty) && qty >= 1 ? qty : 1,
     createdAt: row.createdAt,
     updatedAt: row.updatedAt,
   };
 }
 
 function itemToParams(item) {
+  const qty = item.quantity == null ? 1 : Number(item.quantity);
   return {
     id: item.id,
     name: item.name,
@@ -91,6 +113,10 @@ function itemToParams(item) {
     featured: item.featured ? 1 : 0,
     isWant: item.isWant ? 1 : 0,
     acquiredAt: item.acquiredAt ?? null,
+    price: item.price == null || item.price === '' ? null : Number(item.price),
+    purchasedFrom: item.purchasedFrom ?? null,
+    productLink: item.productLink ?? null,
+    quantity: Number.isFinite(qty) && qty >= 1 ? qty : 1,
     createdAt: item.createdAt,
     updatedAt: item.updatedAt,
   };
@@ -100,11 +126,13 @@ const upsertStmt = db.prepare(`
   INSERT INTO items (
     id, name, sku, barcode, modelNumber, brand, category, color,
     tags, customLabels, images, primaryImageIndex, notes,
-    starred, featured, isWant, acquiredAt, createdAt, updatedAt
+    starred, featured, isWant, acquiredAt, price, purchasedFrom, productLink, quantity,
+    createdAt, updatedAt
   ) VALUES (
     @id, @name, @sku, @barcode, @modelNumber, @brand, @category, @color,
     @tags, @customLabels, @images, @primaryImageIndex, @notes,
-    @starred, @featured, @isWant, @acquiredAt, @createdAt, @updatedAt
+    @starred, @featured, @isWant, @acquiredAt, @price, @purchasedFrom, @productLink, @quantity,
+    @createdAt, @updatedAt
   )
   ON CONFLICT(id) DO UPDATE SET
     name=excluded.name,
@@ -123,6 +151,10 @@ const upsertStmt = db.prepare(`
     featured=excluded.featured,
     isWant=excluded.isWant,
     acquiredAt=excluded.acquiredAt,
+    price=excluded.price,
+    purchasedFrom=excluded.purchasedFrom,
+    productLink=excluded.productLink,
+    quantity=excluded.quantity,
     createdAt=excluded.createdAt,
     updatedAt=excluded.updatedAt
 `);
