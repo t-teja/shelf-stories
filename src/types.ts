@@ -91,7 +91,7 @@ export const ROOMS: { id: Room; label: string; hint: string }[] = [
   { id: 'all', label: 'The Collection', hint: 'Full inventory' },
   { id: 'garage', label: 'Garage', hint: 'Cars · Hot Wheels · Matchbox' },
   { id: 'brickyard', label: 'Brick Yard', hint: 'Lego · Technic · Sets' },
-  { id: 'treasure', label: 'Vault', hint: 'Premium & starred pieces' },
+  { id: 'treasure', label: 'Vault', hint: 'Premium, F1, Technic & starred' },
   { id: 'sky', label: 'Hangar', hint: 'Flights & aviation' },
   { id: 'paddock', label: 'Paddock', hint: 'Formula 1 machines' },
   { id: 'want', label: 'Wishlist', hint: 'Acquisitions ahead' },
