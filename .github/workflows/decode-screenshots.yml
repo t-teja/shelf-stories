@@ -18,7 +18,7 @@ jobs:
           set -euo pipefail
           for name in showcase collection paddock; do
             if ls docs/screenshots/${name}.b64.* >/dev/null 2>&1; then
-              cat docs/screenshots/${name}.b64.* > "docs/screenshots/${name}.b64"
+              cat $(ls docs/screenshots/${name}.b64.* | sort -V) > "docs/screenshots/${name}.b64"
               echo "assembled ${name}.b64 from parts ($(wc -c < docs/screenshots/${name}.b64) bytes)"
               rm -f docs/screenshots/${name}.b64.*
             fi
