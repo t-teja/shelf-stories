@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { AlertTriangle, ImagePlus, Star, Sparkles, Trash2, X } from 'lucide-react';
+import { AlertTriangle, Camera, ImagePlus, Star, Sparkles, Trash2, X } from 'lucide-react';
 import type { Brand, Category, CollectionItem, ColorFamily } from '../types';
 import { BRANDS, CATEGORIES, COLORS } from '../types';
 import { analyzeItemText, brandInitial, placeholderGradient } from '../lib/heuristics';
@@ -21,7 +21,7 @@ function makePlaceholder(brand: Brand, color: ColorFamily, name: string): string
   const c1 = brandHex[brand];
   const c2 = colorHex[color];
   const initial = brandInitial(brand);
-  const safe = (name || 'New Piece').slice(0, 28).replace(/[<>&]/g, '');
+  const safe = (name || 'New Piece').slice(0, 28).replace(/[<>&']/g, '');
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="640" height="480"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${c1}"/><stop offset="100%" stop-color="${c2}"/></linearGradient></defs><rect width="640" height="480" fill="url(#g)"/><text x="320" y="220" text-anchor="middle" font-family="Georgia, serif" font-size="64" font-weight="500" fill="#F5F5F5">${initial}</text><text x="320" y="290" text-anchor="middle" font-family="system-ui" font-size="18" font-weight="500" letter-spacing="2" fill="#8F8F8F">${safe}</text></svg>`;
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
@@ -346,7 +346,7 @@ export function AddItemModal({
             </label>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+          <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto]">
             <label className={labelClass}>
               Image URL
               <div className="mt-1 flex gap-2">
@@ -355,9 +355,14 @@ export function AddItemModal({
               </div>
             </label>
             <label className="flex cursor-pointer flex-col items-center justify-center gap-1 border border-dashed border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] hover:border-[#DA291C]/50">
+              <Camera size={16} strokeWidth={1.5} />
+              Camera
+              <input type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => { void onUpload(e.target.files); e.target.value = ''; }} />
+            </label>
+            <label className="flex cursor-pointer flex-col items-center justify-center gap-1 border border-dashed border-[var(--border)] bg-[var(--bg-soft)] px-4 py-3 text-[10px] font-medium uppercase tracking-[0.1em] hover:border-[#DA291C]/50">
               <ImagePlus size={16} strokeWidth={1.5} />
-              Upload
-              <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => void onUpload(e.target.files)} />
+              Gallery
+              <input type="file" accept="image/*" multiple className="hidden" onChange={(e) => { void onUpload(e.target.files); e.target.value = ''; }} />
             </label>
           </div>
 
